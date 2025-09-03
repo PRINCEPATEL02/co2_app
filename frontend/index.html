@@ -1,19 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>CO2 Emissions Predictor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-    .container { background: #fff; padding: 30px; border-radius: 10px; width: 450px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    h2 { text-align: center; margin-top: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 420px;
+      margin: auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; }
     label { font-weight: bold; display: block; margin: 10px 0 5px; }
-    input, button { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; }
-    button { background: #28a745; color: #fff; font-size: 16px; cursor: pointer; }
+    input, select, button {
+      width: 100%; padding: 8px; margin-bottom: 15px;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    button {
+      background: #28a745; color: white; font-size: 16px; cursor: pointer;
+    }
     button:hover { background: #218838; }
-    .result { margin-top: 20px; padding: 15px; background: #e9f7ef; border-radius: 6px; display: none; }
-    .hint { color:#666; font-size: 12px; margin-top: -10px; margin-bottom: 12px; }
+    .result {
+      margin-top: 20px; padding: 15px; background: #e9f7ef;
+      border-radius: 6px; display: none;
+    }
   </style>
 </head>
 <body>
@@ -21,28 +38,27 @@
     <h2>CO2 Emissions Predictor</h2>
     <form id="predictForm">
       <label for="make">Make</label>
-      <input type="text" id="make" placeholder="e.g., Toyota, Honda, Ford" required>
+      <input type="text" id="make" required>
 
       <label for="model">Model</label>
-      <input type="text" id="model" placeholder="e.g., Corolla, Civic, Mustang" required>
+      <input type="text" id="model" required>
 
       <label for="vehicleClass">Vehicle Class</label>
-      <input type="text" id="vehicleClass" placeholder="e.g., Sedan, SUV, Truck" required>
+      <input type="text" id="vehicleClass" required>
 
       <label for="engine">Engine Size (L)</label>
-      <input type="number" id="engine" step="0.1" placeholder="e.g., 1.8" required>
+      <input type="number" id="engine" step="0.1" required>
 
       <label for="cylinders">Cylinders</label>
-      <input type="number" id="cylinders" placeholder="e.g., 4" required>
+      <input type="number" id="cylinders" required>
 
       <label for="transmission">Transmission</label>
-      <input type="text" id="transmission" placeholder="e.g., Automatic, Manual, CVT" required>
+      <input type="text" id="transmission" required>
 
       <label for="fuel">Fuel Type</label>
-      <input type="text" id="fuel" placeholder="e.g., Petrol, Diesel, Hybrid" required>
+      <input type="text" id="fuel" required>
 
       <button type="submit">Predict</button>
-      <div class="hint">Tip: use values your model was trained on for best results.</div>
     </form>
 
     <div class="result" id="resultBox">
@@ -52,35 +68,32 @@
   </div>
 
   <script>
-    document.getElementById("predictForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+    document.getElementById("predictForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
 
       const data = {
-        Make: document.getElementById("make").value.trim(),
-        Model: document.getElementById("model").value.trim(),
-        "Vehicle Class": document.getElementById("vehicleClass").value.trim(),
+        Make: document.getElementById("make").value,
+        Model: document.getElementById("model").value,
+        "Vehicle Class": document.getElementById("vehicleClass").value,
         "Engine Size(L)": parseFloat(document.getElementById("engine").value),
-        Cylinders: parseInt(document.getElementById("cylinders").value, 10),
-        Transmission: document.getElementById("transmission").value.trim(),
-        "Fuel Type": document.getElementById("fuel").value.trim()
+        Cylinders: parseInt(document.getElementById("cylinders").value),
+        Transmission: document.getElementById("transmission").value,
+        "Fuel Type": document.getElementById("fuel").value
       };
 
       try {
-        // Same origin (Render) → just use a relative path
-        const res = await fetch("/predict", {
+        const response = await fetch("/predict", {   // same domain
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error("Server error: " + res.status);
-        const result = await res.json();
-
+        const result = await response.json();
         document.getElementById("resultBox").style.display = "block";
-        document.getElementById("prediction").textContent =
+        document.getElementById("prediction").innerText =
           `Predicted CO2 Emission: ${result.prediction} g/km`;
-      } catch (err) {
-        alert("⚠️ Request failed. Please try again.\n\n" + err);
+      } catch (error) {
+        alert("⚠️ Error: Could not connect to backend.");
       }
     });
   </script>
