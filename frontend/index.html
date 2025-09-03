@@ -19,7 +19,7 @@
     }
     h2 { text-align: center; }
     label { font-weight: bold; display: block; margin: 10px 0 5px; }
-    input, select, button {
+    input, button {
       width: 100%; padding: 8px; margin-bottom: 15px;
       border: 1px solid #ccc; border-radius: 6px;
     }
@@ -37,26 +37,62 @@
   <div class="container">
     <h2>CO2 Emissions Predictor</h2>
     <form id="predictForm">
+      
       <label for="make">Make</label>
-      <input type="text" id="make" required>
+      <input type="text" id="make" list="makeList" required>
+      <datalist id="makeList">
+        <option value="Toyota">
+        <option value="Honda">
+        <option value="Ford">
+      </datalist>
 
       <label for="model">Model</label>
-      <input type="text" id="model" required>
+      <input type="text" id="model" list="modelList" required>
+      <datalist id="modelList">
+        <option value="Corolla">
+        <option value="Civic">
+        <option value="Focus">
+      </datalist>
 
       <label for="vehicleClass">Vehicle Class</label>
-      <input type="text" id="vehicleClass" required>
+      <input type="text" id="vehicleClass" list="vehicleList" required>
+      <datalist id="vehicleList">
+        <option value="Sedan">
+        <option value="SUV">
+        <option value="Hatchback">
+      </datalist>
 
       <label for="engine">Engine Size (L)</label>
-      <input type="number" id="engine" step="0.1" required>
+      <input type="number" id="engine" step="0.1" list="engineList" required>
+      <datalist id="engineList">
+        <option value="1.6">
+        <option value="2.0">
+        <option value="3.5">
+      </datalist>
 
       <label for="cylinders">Cylinders</label>
-      <input type="number" id="cylinders" required>
+      <input type="number" id="cylinders" list="cylinderList" required>
+      <datalist id="cylinderList">
+        <option value="4">
+        <option value="6">
+        <option value="8">
+      </datalist>
 
       <label for="transmission">Transmission</label>
-      <input type="text" id="transmission" required>
+      <input type="text" id="transmission" list="transmissionList" required>
+      <datalist id="transmissionList">
+        <option value="Automatic">
+        <option value="Manual">
+        <option value="CVT">
+      </datalist>
 
       <label for="fuel">Fuel Type</label>
-      <input type="text" id="fuel" required>
+      <input type="text" id="fuel" list="fuelList" required>
+      <datalist id="fuelList">
+        <option value="Petrol">
+        <option value="Diesel">
+        <option value="Hybrid">
+      </datalist>
 
       <button type="submit">Predict</button>
     </form>
@@ -82,7 +118,7 @@
       };
 
       try {
-        const response = await fetch("/predict", {   // same domain
+        const response = await fetch("/predict", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
